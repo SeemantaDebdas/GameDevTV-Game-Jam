@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     
     Rigidbody2D rb = null;
     Vector3 velocity = Vector3.zero;
+    bool isFacingLeft = false;
+
+    public bool GetIsGrounded { get { return IsGrounded(); } }
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -27,7 +30,18 @@ public class Player : MonoBehaviour
 
         if(inputNormalized.magnitude > 0.1f)
         {
-            float maxVelocityX = (inputNormalized.x > 0) ? maxVelocity : -maxVelocity;
+            float maxVelocityX;
+            if(inputNormalized.x > 0)
+            {
+                maxVelocityX = maxVelocity;
+                isFacingLeft = false;
+            }
+            else
+            {
+                maxVelocityX = -maxVelocity;
+                isFacingLeft = true;
+            }
+            FlipSprite(isFacingLeft);
             velocity.x = Mathf.MoveTowards(velocity.x, maxVelocityX, accelarationSpeed);
         }
         else
@@ -52,6 +66,17 @@ public class Player : MonoBehaviour
         if (Physics2D.Raycast(transform.position, Vector3.down, groundCheckDistance, groundCheckLayerMask))
             return true;
         return false;
+    }
+
+    void FlipSprite(bool isFacingLeft)
+    {
+        Vector3 localScale = transform.localScale;
+        if (isFacingLeft)
+            localScale.x = -Mathf.Abs(localScale.x);
+        else
+            localScale.x = Mathf.Abs(localScale.x);
+
+        transform.localScale = localScale;
     }
 
     private void OnDrawGizmos()
