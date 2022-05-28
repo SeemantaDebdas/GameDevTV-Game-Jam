@@ -34,7 +34,7 @@ public class SoulLink : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R) && isLinked)
             DetachLink();
-        if (isLinked) return;
+        if (isLinked || linkableEntities == null) return;
 
         LinkableEntity closestLinkableEntity = FindClosestLinkableEntity();
 
