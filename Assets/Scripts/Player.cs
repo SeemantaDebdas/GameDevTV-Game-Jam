@@ -84,7 +84,12 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(velocity.x, velocity.y); 
     }
 
-    public void ControlInput(bool state) => stopInput = state;
+    public void ControlInput(bool state)
+    {
+        stopInput = state;
+        inputNormalized = Vector3.zero;
+        rb.velocity = Vector3.zero;
+    }
 
     private bool IsGrounded()
     {
@@ -121,8 +126,6 @@ public class Player : MonoBehaviour
             rb.isKinematic = false;
         }
     }
-
-
 
     private void OnDrawGizmos()
     {

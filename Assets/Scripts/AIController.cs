@@ -21,6 +21,7 @@ public class AIController : MonoBehaviour
     int currentWaypoint = 0;
 
     public bool IsDead { get { return isDead; } }
+    public bool GetIsGrounded { get { return IsGrounded(); } }
 
     private void Awake()
     {

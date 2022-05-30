@@ -61,7 +61,7 @@ public class Interactable : MonoBehaviour
                     rb.mass = 50;
                     rb.gravityScale = 1.2f;
                 }
-                child.GetComponent<BoxCollider2D>().enabled = true;
+                child.GetComponent<CapsuleCollider2D>().enabled = true;
             } 
         }
         GetComponent<BoxCollider2D>().enabled = false;

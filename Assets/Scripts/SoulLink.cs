@@ -88,9 +88,10 @@ public class SoulLink : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("Player");
         
         currentEntity.transform.parent = null;
-        currentEntity.GetComponent<CircleCollider2D>().enabled = true;
-
+        currentEntity.GetComponent<CapsuleCollider2D>().enabled = true;
+        currentEntity.GetComponent<Animator>().SetTrigger("IsDead");
         GetComponentInChildren<SpriteRenderer>().enabled = true;
+        GetComponent<AnimationController>().RevertAnimator();
         lineRenderer.enabled = true;
     }
 
@@ -107,9 +108,16 @@ public class SoulLink : MonoBehaviour
         transform.position = entity.transform.position;
         
         entity.transform.parent = transform;
-        entity.GetComponent<CircleCollider2D>().enabled = false;    
-        
+        entity.GetComponent<CapsuleCollider2D>().enabled = false;
+        entity.GetComponent<Rigidbody2D>().isKinematic = true;
         GetComponentInChildren<SpriteRenderer>().enabled = false;
+        GetComponent<AnimationController>().ChangeAnimator(entity.GetComponent<Animator>());
+        entity.GetComponent<Animator>().ResetTrigger("IsDead");
+        entity.GetComponent<EnemyAnimation>().enabled = false;
+        entity.transform.localScale = new Vector3(Mathf.Sign(transform.localScale.x) * entity.transform.localScale.x,
+                                                   entity.transform.localScale.y,
+                                                   entity.transform.localScale.z);
+
         lineRenderer.enabled = false;
     }
 
@@ -129,7 +137,7 @@ public class SoulLink : MonoBehaviour
         lineRenderer.enabled = true;
         lineRenderer.positionCount = 2;
         lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, entity.transform.position);
+        lineRenderer.SetPosition(1, entity.transform.position + (Vector3.down * 0.3f));
     }
 
     private void OnDrawGizmos()

@@ -17,7 +17,12 @@ public class EnemyAnimation : MonoBehaviour
 
     private void Update()
     {
-        anim.SetFloat("Velocity", rb.velocity.x);
-        anim.SetBool("IsDead", enemy.IsDead);
+        if (!enemy.IsDead)
+        {
+            if (Mathf.Abs(rb.velocity.x) > 0 && enemy.GetIsGrounded)
+                anim.Play("Run");
+        }
+        else
+            anim.SetBool("IsDead", true);
     }
 }
