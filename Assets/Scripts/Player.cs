@@ -8,16 +8,29 @@ public class Player : MonoBehaviour
     [SerializeField] float accelarationSpeed = 0.2f;
     [SerializeField] float decelarationSpeed = 0.5f;
     [SerializeField] float maxVelocity = 5f;
+
+    [Header("Jumping")]
     [SerializeField] float maxJumpHeight = 3f;
     [SerializeField] float gravityMultiplier = 2f;
     [SerializeField] float groundCheckDistance = 1.0f;
     [SerializeField] LayerMask groundCheckLayerMask;
+
+    [Header("Climbing")]
+    [SerializeField] float climbingSpeed = 0.5f;
     
     Rigidbody2D rb = null;
     Vector3 velocity = Vector3.zero;
+    Vector2 inputNormalized;
     bool isFacingLeft = false;
+    bool isClimbing = false;
+    bool stopInput = false;
 
     public bool GetIsGrounded { get { return IsGrounded(); } }
+    public bool GetIsClimbing { get { return isClimbing; } }
+    public float GetVelocity { get { return velocity.y; } }
+    public Vector2 GetInput { get { return inputNormalized; } }
+
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -26,9 +39,12 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 inputNormalized = new Vector2(Input.GetAxisRaw("Horizontal"), 0).normalized;
+        if (stopInput) return;
 
-        if(inputNormalized.magnitude > 0.1f)
+        inputNormalized = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+
+        //movement condition check
+        if(Mathf.Abs(inputNormalized.x) > 0.1f)
         {
             float maxVelocityX;
             if(inputNormalized.x > 0)
@@ -49,17 +65,26 @@ public class Player : MonoBehaviour
             velocity.x = Mathf.MoveTowards(velocity.x, 0, decelarationSpeed);
         }
 
+        //Grounded condition check
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
             velocity.y = Mathf.Sqrt(-2* Physics2D.gravity.y * gravityMultiplier * maxJumpHeight);
         }
-        else
+        else if(!isClimbing)
         {
             velocity.y = rb.velocity.y; 
         }
 
+        //climbing
+        if (isClimbing)
+        {
+            velocity.y = inputNormalized.y * climbingSpeed;
+        }
+
         rb.velocity = new Vector2(velocity.x, velocity.y); 
     }
+
+    public void ControlInput(bool state) => stopInput = state;
 
     private bool IsGrounded()
     {
@@ -78,6 +103,26 @@ public class Player : MonoBehaviour
 
         transform.localScale = localScale;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Ladder") && !isFacingLeft)
+        {
+            isClimbing = true;
+            rb.isKinematic = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Ladder"))
+        {
+            isClimbing = false;
+            rb.isKinematic = false;
+        }
+    }
+
+
 
     private void OnDrawGizmos()
     {

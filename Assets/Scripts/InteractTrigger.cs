@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InteractTrigger : MonoBehaviour
 {
     [SerializeField] Interactable.InteractableType interactableType;
+    [SerializeField] UnityEvent triggerEventList;
+
     public event Action OnTriggered;
     public event Action OnLeverTriggered;
     public event Action<bool> OnPressurePadChanged;
@@ -41,19 +44,16 @@ public class InteractTrigger : MonoBehaviour
 
     private void ActivateTrigger()
     {
-        GetComponent<SpriteRenderer>().color = Color.red;
-
         if (Input.GetKey(KeyCode.F))
         {
             OnTriggered?.Invoke();
-            gameObject.SetActive(false);
+            triggerEventList?.Invoke();
+            //trigger dissolve shader
         }
     }
 
     void ActivateLeverTrigger()
     {
-        GetComponent<SpriteRenderer>().color = Color.red;
-
         if (Input.GetKey(KeyCode.F))
         {
             OnLeverTriggered?.Invoke();

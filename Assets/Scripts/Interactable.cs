@@ -18,6 +18,7 @@ public class Interactable : MonoBehaviour
     [SerializeField] List<Transform> elevatorWaypoints;
     int currentElevatorWaypoint = 0;
     bool elevatorShouldMove = false;
+    bool isTriggered = false;
 
     public InteractableType GetInteractableType { get { return interactableType; } }
 
@@ -47,12 +48,23 @@ public class Interactable : MonoBehaviour
 
     private void TriggerEvent()
     {
-        GetComponent<Rigidbody2D>().isKinematic = false;
+        isTriggered = true;
+        //GetComponent<Rigidbody2D>().isKinematic = false;
         if(transform.childCount > 0)
         {
             foreach(Transform child in transform)
-                child.GetComponent<Rigidbody2D>().isKinematic = false;
+            {
+                Rigidbody2D rb = child.GetComponent<Rigidbody2D>();
+                if (rb.bodyType == RigidbodyType2D.Kinematic)
+                {
+                    rb.isKinematic = false;
+                    rb.mass = 50;
+                    rb.gravityScale = 1.2f;
+                }
+                child.GetComponent<BoxCollider2D>().enabled = true;
+            } 
         }
+        GetComponent<BoxCollider2D>().enabled = false;
     }
 
     private void PressurePadEvent(bool args)
@@ -69,7 +81,7 @@ public class Interactable : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(interactableType == InteractableType.Trigger)
+        if(interactableType == InteractableType.Trigger && isTriggered)
         {
             //trigger particle system
             if (transform.childCount > 0)
@@ -77,7 +89,6 @@ public class Interactable : MonoBehaviour
                 foreach (Transform child in transform)
                     child.parent = null;
             }
-            Destroy(this.gameObject);
         }
 
         if(interactableType == InteractableType.PressurePad)
@@ -94,4 +105,5 @@ public class Interactable : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
             collision.transform.parent = null;
     }
+
 }

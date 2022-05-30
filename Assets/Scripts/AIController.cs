@@ -72,7 +72,7 @@ public class AIController : MonoBehaviour
 
     private bool ObstacleDetected()
     {
-        if (Physics2D.Raycast(groundCheckTransform.position, lookDir, groundCheckDistance, groundCheckLayerMask))
+        if (Physics2D.Raycast(transform.position, lookDir, groundCheckDistance, groundCheckLayerMask))
             return true;
         return false;
     }
@@ -95,10 +95,9 @@ public class AIController : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         isDead = true;
-        rb.isKinematic = true;
         rb.velocity = Vector2.zero;
     }
 
@@ -107,7 +106,7 @@ public class AIController : MonoBehaviour
         if (groundCheckTransform == null) return;
 
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(groundCheckTransform.position, (Vector2)groundCheckTransform.position + Vector2.down * groundCheckDistance);
+        Gizmos.DrawLine(transform.position, (Vector2)transform.position + Vector2.down * groundCheckDistance);
         Gizmos.DrawLine(groundCheckTransform.position, (Vector2)groundCheckTransform.position + lookDir * groundCheckDistance);
 
 

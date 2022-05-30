@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 8650590f96f19df458bcde3120b78437
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Horrors
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 43003e79b7bb7814bb86077538dd0497, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
