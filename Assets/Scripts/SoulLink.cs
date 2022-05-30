@@ -23,6 +23,7 @@ public class SoulLink : MonoBehaviour
         linkableEntities = FindObjectsOfType<LinkableEntity>();
         lineRenderer = GetComponentInChildren<LineRenderer>();
         hasLinked = new Dictionary<LinkableEntity, bool>();
+        //SceneLoader.Instance.OnFadeOut += DetachLink;
 
         for(int i= 0;i<linkableEntities.Length;i++)
         {
@@ -37,7 +38,7 @@ public class SoulLink : MonoBehaviour
         if (isLinked || linkableEntities == null) return;
 
         LinkableEntity closestLinkableEntity = FindClosestLinkableEntity();
-
+        print("Called from soul link");
         if(Vector2.Distance(transform.position, closestLinkableEntity.transform.position) <= linkRadius)
         {
             if (closestLinkableEntity.TryGetComponent<AIController>(out var entityEnemy))

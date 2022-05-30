@@ -45,6 +45,10 @@ public class Interactable : MonoBehaviour
             transform.position =  Vector3.MoveTowards(transform.position, elevatorWaypoints[currentElevatorWaypoint].position, 2f * Time.deltaTime);
         }
     }
+    private void Update()
+    {
+        
+    }
 
     private void TriggerEvent()
     {
@@ -61,7 +65,7 @@ public class Interactable : MonoBehaviour
                     rb.mass = 50;
                     rb.gravityScale = 1.2f;
                 }
-                child.GetComponent<CapsuleCollider2D>().enabled = true;
+                child.GetComponent<BoxCollider2D>().enabled = true;
             } 
         }
         GetComponent<BoxCollider2D>().enabled = false;

@@ -6,6 +6,7 @@ public class Door : MonoBehaviour
 {
     [SerializeField] GameObject instructionCanvas;
     [SerializeField] GameObject warningCanvas;
+    [SerializeField] GameObject endCanvas;
     Animator anim;
     
     void Awake()
@@ -41,6 +42,7 @@ public class Door : MonoBehaviour
                 {
                     anim.Play("DoorOpenAnimation");
                     transform.GetChild(0).gameObject.SetActive(false);
+                    endCanvas.SetActive(true);
                 }
             }
         }

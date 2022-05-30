@@ -13,6 +13,13 @@ public class InteractTrigger : MonoBehaviour
     public event Action OnLeverTriggered;
     public event Action<bool> OnPressurePadChanged;
 
+    Player player;
+
+    private void Update()
+    {
+        gameObject.SetActive(!FindObjectOfType<SoulLink>().IsLinked);
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -33,6 +40,21 @@ public class InteractTrigger : MonoBehaviour
             OnPressurePadChanged?.Invoke(false);
         }
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            player = collision.GetComponent<Player>();
+            triggerEventList.AddListener(EnablePlayerInput);
+        }
+    }
+
+    void EnablePlayerInput()
+    {
+        if (player == null) return;
+        player.ControlInput(false);
     }
 
     private void ActivatePressurePad()

@@ -36,6 +36,13 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+    private void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+        SceneLoader.Instance.OnSceneLoad += SetPlayerPosition;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -107,6 +114,11 @@ public class Player : MonoBehaviour
             localScale.x = Mathf.Abs(localScale.x);
 
         transform.localScale = localScale;
+    }
+
+    private void SetPlayerPosition()
+    {
+        transform.position = GameObject.FindGameObjectWithTag("Pose").transform.position;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
